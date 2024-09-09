@@ -10,7 +10,18 @@
 <body>
     {% block page_content %}
         <div class="container mt-5 p5">
-            <p class="mb-3 text-info">Please select a file to upload to calculate depreciation,please note that the file can be the following: {csv, txt, xlsx, xls}. If you are not sure of the format download a sample file as below.</p>
+            <p class="mb-3 text-dark">Please select a file to upload to calculate depreciation,please note that the file can be the following: {csv, txt, xlsx, xls}. If you are not sure of the format download please use the download link below for a sample download_sample_file
+                 <a href="{{url_for('main.download_sample_file')}}" class="nav-link text-info">download link</a>Please note the following about the downloaded file:
+                <ol class="list-group">
+                    <li class="list-group-item">The date dmy represent the date format, d for the day, m for the month and y for the year, the accepted variatioans are {dmy, dym, mdy, myd, ydm, ymd}</li>
+                    <li class="list-group-item">The decimal symbol used in this app is a dot (.)</li>
+                    <li class="list-group-item">DepreciationMethod is either straight (for straightline) or reducing for reducing balance</li>
+                    <li class="list-group-item">YearendMonthAsNumber represent the year end of the entity represented by numbers eg Jan being 1 and Feb being 2 and so forth</li>
+                    <li class="list-group-item">DateSeparator represent your system date separator which can be (/,-, " ") note the last one is a space</li>
+                    <li class="list-group-item">YearendDay means the last day of the financial year eg 28 meaning 28 of the month in the YearendMonthAsNumber column</li>
+                    <li class="list-group-item">DepreciationYears means the number of years the asset will be depreciated over</li>
+                  </ol>
+            </p>
             <form method=post enctype=multipart/form-data>
                 <input class="form-control form-control-lg" type=file name=file>
                 <input type=submit value=Upload class="btn btn-dark mt-3">

@@ -8,10 +8,8 @@ load_dotenv(os.path.join(basedir, '.env'))
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY") or "you can not guess this one"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UPLOAD_FOLDER = os.path.join(basedir, "app\\static\\uploads")
     
-    # @staticmethod
-    # def init_app(app):
-    #     pass
 
 class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv("DEV_DATABASE_URL") or "sqlite:///" + os.path.join(basedir, "dev_db.db")
