@@ -3,7 +3,8 @@ from flask import Blueprint, render_template, Response, request, redirect, flash
 import csv, io, os
 from .helpers import return_csv_headers, return_csv_data
 from werkzeug.utils import secure_filename
-from .helpers import log_to_file
+from .models import FileUploadHistory
+from .helpers import allowed_file
 
 main = Blueprint("main",__name__)
 
@@ -19,7 +20,19 @@ def appload_file():
             return redirect(request.url)
         
         filename = secure_filename(file.filename)
-        file.save(os.path.join(current_app.config["UPLOAD_FOLDER"],filename))
+        if allowed_file(filename):
+            file.save(os.path.join(current_app.config["UPLOAD_FOLDER"],filename))
+            extension = filename.rsplit('.', 1)[1].lower()
+            try:
+                saved_file = FileUploadHistory(file_name = filename, file_extension=extension)
+                db.session.add(saved_file)
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
+                flash("File not saved")
+            return render_template("download.html")
+        else:
+            flash(f"File not saved, files like {filename} are not allowed")
     return render_template("index.html")
 
 @main.route("/download_csv_sample", methods=["GET", "POST"])
