@@ -229,9 +229,10 @@ def calculate_days_between_two_dates(first_date, second_date):
     days = date_diff.days
     return days
 
-def calculate_depn_charge_sl(cost, salvage, useful_life, prior_year,year_end, accum_depn):
+def calculate_depn_charge(cost, salvage, useful_life, prior_year,year_end, accum_depn, method="straight"):
     curr_year = calculate_first_year_end(prior_year, year_end)
     depn_schedule = []
+    charge = 0
     book_value = cost - accum_depn
     if book_value <= salvage:
         year_data = {"year": datetime.strftime(curr_year, "%d-%m-%Y"), "depn_charge":0, "book_value":book_value}
@@ -249,7 +250,11 @@ def calculate_depn_charge_sl(cost, salvage, useful_life, prior_year,year_end, ac
         divisor = 365
         if is_leap_year(next_year.year):
             divisor = 366
-        charge = (cost - salvage)/useful_life * days/divisor
+        if method == "straight":
+            charge = (cost - salvage)/useful_life * days/divisor
+        else:
+            nbv = cost - accum_depn
+            charge = nbv/useful_life * days/divisor
         book_value = cost - accum_depn - charge
         if book_value < salvage and (cost - accum_depn)> salvage:
             charge = cost - accum_depn - salvage
@@ -265,18 +270,6 @@ def calculate_depn_charge_sl(cost, salvage, useful_life, prior_year,year_end, ac
         curr_year = next_year
     return depn_schedule
 
-def calculate_depn_charge_rb(cost, salvage, useful_life, prior_year,year_end, accum_depn):
-    depn_schedule = []
-    curr_year = calculate_first_year_end(prior_year, year_end)
-    book_value = cost - accum_depn
-    if book_value <= salvage:
-        year_data = {"year": datetime.strftime(curr_year, "%d-%m-%Y"), "depn_charge":0, "book_value":book_value}
-        depn_schedule.append(year_data)
-        return depn_schedule
-    divisor = 365
-    # if is_leap_year(curr_year):
-    #     divisor = 366
-    return depn_schedule
 
 class DepreciableAsset:
     def __init__(self,name, depn_method, year_end, depn_start_date
@@ -293,10 +286,10 @@ class DepreciableAsset:
     
     def calculate_depn_schedule(self):
         if self.depn_method == "straight line":
-            self.depn_schedule = calculate_depn_charge_sl(self.purchase_price,self.salvage_value,self.useful_life,self.depn_start_date, self.year_end,self.accum_depn )
-        elif self.depn_method == "reducing":
-            self.depn_schedule = calculate_depn_charge_rb(self.purchase_price,self.salvage_value,self.useful_life,self.depn_start_date, self.year_end,self.accum_depn)
-            self.depn_schedule = []
+            self.depn_schedule = calculate_depn_charge(self.purchase_price,self.salvage_value,self.useful_life,self.depn_start_date, self.year_end,self.accum_depn,self.depn_method )
+        elif self.depn_method == "reducing balance":
+            self.depn_schedule = calculate_depn_charge(self.purchase_price,self.salvage_value,self.useful_life,self.depn_start_date, self.year_end,self.accum_depn,self.depn_method)
+            
    
     def __repr__(self):
         return (f"DepreciableAsset(name='{self.name}', depn_method='{self.depn_method}', "

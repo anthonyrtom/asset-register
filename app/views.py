@@ -33,11 +33,12 @@ def appload_file():
                 db.session.commit()
                 if extension == "csv":
                     returned_dict = read_csv_dict_reader(file_path)
+                    flash("Operation successful")
                     return render_template("download.html", returned_dict=returned_dict)
             except Exception:
                 db.session.rollback()
                 flash("File not saved, there was an error")
-                return redirect(url_for('main.download_file'))
+                return redirect(url_for(request.url))
         else:
             flash(f"File not saved, files like {filename} are not allowed")
             return redirect(request.url)
