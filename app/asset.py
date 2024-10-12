@@ -1,5 +1,5 @@
 from datetime import datetime
-import csv
+import csv, io
 import dateutil.parser
 import math
 
@@ -131,7 +131,7 @@ def extract_date(text):
 
 def read_csv_dict_reader(filename):
     error_list = []
-    depn_schelue_list = []
+    depreciable_asset = []
     try:
         openfile = open(filename)
         dict_reader = csv.DictReader(openfile)
@@ -149,14 +149,15 @@ def read_csv_dict_reader(filename):
                 accum_depn = row["Accumulated Depreciation"]
                 asset = DepreciableAsset(name=name, depn_method=depn_method, year_end=year_end,depn_start_date=depn_start_date, useful_life=useful_life, purchase_price=purchase_price, salvage_value=salvage_value, accum_depn=accum_depn)
                 asset.calculate_depn_schedule()
-                log_to_file(asset,"asset.txt")
-                depn_schelue_list.append(asset)
+                # log_to_file(asset,"asset.txt")
+                depreciable_asset.append(asset)
             else:
                 error_list.append(result_dict)
         openfile.close()
-        return {"asset":depn_schelue_list, "errors":error_list}
+        return {"asset":depreciable_asset, "errors":error_list}
     except Exception as e:
         log_to_file("Error", e)
+
 
 def months_list():
     data = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
@@ -270,6 +271,13 @@ def calculate_depn_charge(cost, salvage, useful_life, prior_year,year_end, accum
         curr_year = next_year
     return depn_schedule
 
+def create_csv_buffer(headers, data):
+    buffer = io.StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow(headers)
+    writer.writerows(data)
+    buffer.seek(0)
+    return buffer
 
 class DepreciableAsset:
     def __init__(self,name, depn_method, year_end, depn_start_date
@@ -290,7 +298,24 @@ class DepreciableAsset:
         elif self.depn_method == "reducing balance":
             self.depn_schedule = calculate_depn_charge(self.purchase_price,self.salvage_value,self.useful_life,self.depn_start_date, self.year_end,self.accum_depn,self.depn_method)
             
-   
+    @staticmethod
+    def get_sorted_years(instance_list):
+        new_list = []
+        if not isinstance(instance_list, list):
+            raise TypeError("Not a list provided")
+        for list_item in instance_list:
+            asset = list_item
+            # asset = DepreciableAsset(list_item)
+            depn_sch = asset.depn_schedule
+            for one_asset in depn_sch:
+                str_yearend = one_asset["year"]
+                date_yearend = datetime.strptime(str_yearend,"%d-%m-%Y")
+                date_yearend.date()
+                new_list.append(date_yearend)
+        new_list.sort()
+        return new_list
+
+        
     def __repr__(self):
         return (f"DepreciableAsset(name='{self.name}', depn_method='{self.depn_method}', "
                 f"year_end='{self.year_end}', depn_start_date='{self.depn_start_date}', "

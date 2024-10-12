@@ -4,6 +4,10 @@
 
 {% block page_content %}
     <div class="container mt-5 p5">
-        <p1 class="container mt-3 p5">Please download your file below</p1>
+        {% if op_success %}
+            <p1 class="container mt-3 p5">Your file should download automatically,thank you</p1>
+        {% else %}
+            <p1 class="container mt-3 p5">Operation was not successful, the errors are downloaded, please fix</p1>
+        {% endif %}
     </div> 
 {% endblock page_content %}
