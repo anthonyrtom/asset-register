@@ -1,3 +1,12 @@
 
- [['Fridge', 'straight line', '28 February', '03-01-2024', '4.0', '10000.0', '2000.0', 389.344262295082, 9610.655737704918, 0, 0, 0, 0, 0, 0, 2402.6639344262294, 7207.991803278688, 0, 0, 0, 0, 0, 0, 1801.997950819672, 5405.993852459016, 0, 0, 0, 0, 0, 0, 1351.498463114754, 4054.495389344262, 0, 0, 0, 0, 0, 0, 1010.8543832723058, 3043.641006071956, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ['Motor Car', 'reducing balance', '30 June', '17-06-2024', '5.0', '200000.0', '0.0', 0, 0, 1412.24043715847, 197387.75956284153, 0, 0, 0, 0, 0, 0, 39477.551912568306, 157910.20765027322, 0, 0, 0, 0, 0, 0, 31582.041530054645, 126328.16612021858, 0, 0, 0, 0, 0, 0, 25265.633224043715, 101062.53289617486, 0, 0, 0, 0, 0, 0, 20212.50657923497, 80850.02631693988, 0, 0, 16170.005263387975, 64680.02105355191, 0, 0, 0, 0, 0, 0], ['Lenovo Laptop', 'straight line', '31 December', '17-06-2024', '3.0', '18000.0', '0.0', 0, 0, 0, 0, 0, 0, 3229.5081967213114, 14770.491803278688, 0, 0, 0, 0, 0, 0, 4923.497267759562, 9846.994535519127, 0, 0, 0, 0, 0, 0, 3282.331511839709, 6564.663023679417, 0, 0, 0, 0, 0, 0, 2188.221007893139, 4376.442015786279, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ['Furniture', 'straight line', '30 September', '01-01-2024', '6.5', '100000.0', '5000.0', 0, 0, 0, 0, 10655.737704918032, 89344.26229508196, 0, 0, 0, 0, 0, 0, 12763.466042154565, 76580.7962529274, 0, 0, 0, 0, 0, 0, 10940.113750418199, 65640.6825025092, 0, 0, 0, 0, 0, 0, 9377.240357501316, 56263.442145007895, 0, 0, 0, 0, 0, 0, 8037.634592143984, 48225.8075528639, 0, 0, 6889.401078980556, 41336.40647388335, 5905.200924840479, 35431.20554904287, 5061.60079272041, 30369.604756322457]] 
+ [(1, 'Depreciation method not supported'), (1, 'Year End not in the correct format'), (2, 'Year End not in the correct format'), (3, 'Year End not in the correct format'), (4, 'Year End not in the correct format')] 
+=========== logged=========== 
+
+ [(2, 'Depreciation method not supported'), (2, 'Year End not in the correct format'), (3, 'Year End not in the correct format'), (4, 'Year End not in the correct format'), (5, 'Year End not in the correct format')] 
+=========== logged=========== 
+
+ [(2, 'Depreciation method not supported'), (2, 'Year End not in the correct format'), (3, 'Year End not in the correct format'), (4, 'Year End not in the correct format'), (5, 'Year End not in the correct format')] 
+=========== logged=========== 
+
+ [(2, 'Depreciation method not supported'), (2, 'Year End not in the correct format'), (3, 'Year End not in the correct format'), (4, 'Year End not in the correct format'), (5, 'Year End not in the correct format')] 
 =========== logged=========== 

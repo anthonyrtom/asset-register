@@ -41,16 +41,15 @@
     {% endblock flashed_messages %}
     {% block page_content %}
         <div class="container mt-5 mb-5 p5">
-            <p class="mt-5 mb-3 text-dark">Please select a file to upload to calculate depreciation,please note that the file can be the following: {csv, txt, xlsx, xls}. If you are not sure of the format download please use the download link above on the menu
-                 Please note the following about the downloaded file:
+            <p class="h1">This app calculates depreciation over the useful life of an asset</p>
+            <p class="mt-5 mb-3 text-dark">Please select a file to upload to calculate depreciation,please note that the file format accepted is csv.Microsoft Excel files may be introduced later.If you are not sure of the format download please use the download link above on the menu
+                 Please note the following about the downloaded sample file:
                 <ol class="list-group">
-                    <li class="list-group-item">The date dmy represent the date format, d for the day, m for the month and y for the year, the accepted variatioans are {dmy, dym, mdy, myd, ydm, ymd}</li>
-                    <li class="list-group-item">The decimal symbol used in this app is a dot (.)</li>
-                    <li class="list-group-item">DepreciationMethod is either straight (for straightline) or reducing for reducing balance</li>
-                    <li class="list-group-item">YearendMonthAsNumber represent the year end of the entity represented by numbers eg Jan being 1 and Feb being 2 and so forth</li>
-                    <li class="list-group-item">DateSeparator represent your system date separator which can be (/,-, " ") note the last one is a space</li>
-                    <li class="list-group-item">YearendDay means the last day of the financial year eg 28 meaning 28 of the month in the YearendMonthAsNumber column</li>
-                    <li class="list-group-item">DepreciationYears means the number of years the asset will be depreciated over</li>
+                    <li class="list-group-item">Depreciation Method is either straight line or reducing balance, no ther method allowed</li>
+                    <li class="list-group-item">Please follow the format of the sample file including headers as the ones specified</li>
+                    <li class="list-group-item">Please check your file that it has been done correctly, you use the app at your own risk</li>
+                    <li class="list-group-item">If your file is in the correct format, it will bedowloaded automatically after depreciation has been calculated</li>
+                    <li class="list-group-item">In case of errors and the app can not calculate for any single line in your csv, a page with the errors will be displayed</li>
                   </ol>
             </p>
             <form method=post enctype=multipart/form-data>

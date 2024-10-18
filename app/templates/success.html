@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+
+{% block title%}Download File {% endblock %}
+
+{% block page_content %}
+    <div class="container mt-5 p5">
+        <p class="h1">Your file is ready for download please download
+            <a href="{{url_for('main.download_csv_asset')}}" class="btn btn-primary">Download csv file</a>
+        </p>
+    </div> 
+{% endblock page_content %}

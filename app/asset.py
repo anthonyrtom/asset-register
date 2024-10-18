@@ -12,7 +12,7 @@ def return_csv_data():
     return data
 
 
-def error_dict(row):
+def error_dict(row, row_number):
     row_data_dict = {} 
     row_data_dict["correctly_formatted"] = True
     row_data_dict["errors"] = []
@@ -22,23 +22,23 @@ def error_dict(row):
         row_data_dict["errors"].extend(row_data_dict["errors"])
     if row.get("Asset Name","") == "":
         row_data_dict["correctly_formatted"] = False
-        row_data_dict["errors"].append("Empty asset name")
+        row_data_dict["errors"].append((row_number + 1,"Empty asset name"))
     temp_val = row.get("Depreciation Method",None)
     if  (not temp_val) or not(temp_val.lower() in ["straight line", "reducing balance"]):
         row_data_dict["correctly_formatted"] = False
-        row_data_dict["errors"].append("Depreciation method not supported")
+        row_data_dict["errors"].append((row_number + 1,"Depreciation method not supported"))
     temp_val = row.get("Year End",None)
     if not temp_val:
         row_data_dict["correctly_formatted"] = False
-        row_data_dict["errors"].append("Year End blank")
+        row_data_dict["errors"].append((row_number + 1,"Year End blank"))
     else:
         if not year_end_correctly_formatted(temp_val):
             row_data_dict["correctly_formatted"] = False
-            row_data_dict["errors"].append("Year End not in the correct format")
+            row_data_dict["errors"].append((row_number + 1,"Year End not in the correct format"))
     strdate = row.get("Depreciation Start Date",None)
     if not strdate or (extract_date(strdate) is None):
         row_data_dict["correctly_formatted"] = False
-        row_data_dict["errors"].append("Date could not be parsed correctly")
+        row_data_dict["errors"].append((row_number + 1,"Date could not be parsed correctly"))
     return row_data_dict
 
 def year_end_correctly_formatted(year_end):
@@ -135,8 +135,8 @@ def read_csv_dict_reader(filename):
     try:
         openfile = open(filename)
         dict_reader = csv.DictReader(openfile)
-        for row in dict_reader:
-            result_dict = error_dict(row)
+        for row_number, row in enumerate(dict_reader, start=1):
+            result_dict = error_dict(row, row_number)
             if result_dict["correctly_formatted"]:
                 name = row["Asset Name"]
                 depn_method = row["Depreciation Method"]
@@ -251,7 +251,7 @@ def calculate_depn_charge(cost, salvage, useful_life, prior_year,year_end, accum
         divisor = 365
         if is_leap_year(next_year.year):
             divisor = 366
-        if method == "straight":
+        if method == "straight line":
             charge = (cost - salvage)/useful_life * days/divisor
         else:
             nbv = cost - accum_depn
@@ -278,6 +278,55 @@ def create_csv_buffer(headers, data):
     writer.writerows(data)
     buffer.seek(0)
     return buffer
+
+def write_csv_to_file(file_path, headers, data):
+    file_name = "data.csv"
+    with open(fr"{file_path}\{file_name}","w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(headers)
+        writer.writerows(data)
+
+def return_csv_buffer(assets_list):
+    data = []
+    csv_headers = DepreciableAsset.get_sorted_years(assets_list)
+    headers = ["Name", "Depn Method", "Year End", "Depn Start Date", "Useful Life", "Purchase Price", "Salvage Value"]
+    str_headers = [dt.strftime("%d-%m-%Y") for dt in csv_headers]
+    for header in str_headers:
+        headers.append(f"Depn_Charge {header}")
+        headers.append(f"Book_Value {header}")
+    for asset in assets_list:
+        asset_dep_schedule = asset.depn_schedule
+        asset_list = [asset.name, asset.depn_method, asset.year_end, asset.depn_start_date.strftime("%d-%m-%Y"), str(asset.useful_life), str(asset.purchase_price), str(asset.salvage_value)]
+        asset_data = []
+        asset_data.extend(asset_list)
+        years_items = [item["year"] for item in asset_dep_schedule]
+        charge_list = [item["depn_charge"] for item in asset_dep_schedule]
+        book_value_list = [item["book_value"] for item in asset_dep_schedule]
+        i = 0
+        while i < len(str_headers):
+            single_date = csv_headers[i]
+            single_date = single_date.strftime("%d-%m-%Y")
+            if single_date in years_items:
+                index = years_items.index(single_date)
+                charge = charge_list[index]
+                book_value = book_value_list[index]
+                asset_data.append(charge)
+                asset_data.append(book_value)
+            else:
+                asset_data.append(0)
+                asset_data.append(0)
+            i += 1
+        data.append(asset_data)
+    return (data, headers)
+
+def unpack_dict(error_list):
+    data = []
+    for row in error_list:
+        data_list = row["errors"]
+        for item in data_list:
+            data.append((item[0], item[1] ))
+    log_to_file(data, "data.txt")
+    return data
 
 class DepreciableAsset:
     def __init__(self,name, depn_method, year_end, depn_start_date
