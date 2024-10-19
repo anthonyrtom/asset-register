@@ -129,6 +129,35 @@ def extract_date(text):
 
     return None  # If no date could be extracted, return None
 
+# def read_csv_dict_reader(filename):
+#     error_list = []
+#     depreciable_asset = []
+#     try:
+#         # openfile = open(filename)
+#         openfile = filename.read().decode('utf-8')
+#         dict_reader = csv.DictReader(openfile)
+#         for row_number, row in enumerate(dict_reader, start=1):
+#             result_dict = error_dict(row, row_number)
+#             if result_dict["correctly_formatted"]:
+#                 name = row["Asset Name"]
+#                 depn_method = row["Depreciation Method"]
+#                 year_end = row["Year End"]
+#                 depn_start_date = row["Depreciation Start Date"]
+#                 depn_start_date = extract_date(depn_start_date)
+#                 useful_life = row["Useful Life"]
+#                 purchase_price = row["Purchase Price"]
+#                 salvage_value = row["Salvage Value"]
+#                 accum_depn = row["Accumulated Depreciation"]
+#                 asset = DepreciableAsset(name=name, depn_method=depn_method, year_end=year_end,depn_start_date=depn_start_date, useful_life=useful_life, purchase_price=purchase_price, salvage_value=salvage_value, accum_depn=accum_depn)
+#                 asset.calculate_depn_schedule()
+#                 depreciable_asset.append(asset)
+#             else:
+#                 error_list.append(result_dict)
+#         openfile.close()
+#         return {"asset":depreciable_asset, "errors":error_list}
+#     except Exception as e:
+#         return {"asset":[], "errors":[]}
+
 def read_csv_dict_reader(filename):
     error_list = []
     depreciable_asset = []
@@ -149,14 +178,13 @@ def read_csv_dict_reader(filename):
                 accum_depn = row["Accumulated Depreciation"]
                 asset = DepreciableAsset(name=name, depn_method=depn_method, year_end=year_end,depn_start_date=depn_start_date, useful_life=useful_life, purchase_price=purchase_price, salvage_value=salvage_value, accum_depn=accum_depn)
                 asset.calculate_depn_schedule()
-                # log_to_file(asset,"asset.txt")
                 depreciable_asset.append(asset)
             else:
                 error_list.append(result_dict)
         openfile.close()
         return {"asset":depreciable_asset, "errors":error_list}
     except Exception as e:
-        log_to_file("Error", e)
+        return {"asset":[], "errors":[]}
 
 
 def months_list():
@@ -325,7 +353,7 @@ def unpack_dict(error_list):
         data_list = row["errors"]
         for item in data_list:
             data.append((item[0], item[1] ))
-    log_to_file(data, "data.txt")
+    # log_to_file(data, "data.txt")
     return data
 
 class DepreciableAsset:
