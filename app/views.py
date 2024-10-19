@@ -91,14 +91,14 @@ def appload_file():
         if allowed_file(filename):
             upload_folder = current_app.config["UPLOAD_FOLDER"]
             file_path = os.path.join(upload_folder,filename)
-            file.save(file_path)
+            # file.save(file_path)
             try:
                 extension = filename.rsplit('.', 1)[1].lower()
                 saved_file = FileUploadHistory(file_name = filename, file_extension=extension)
                 db.session.add(saved_file)
                 db.session.commit()
                 if extension == "csv":
-                    returned_dict = read_csv_dict_reader(file_path)
+                    returned_dict = read_csv_dict_reader(file)
                     if returned_dict["errors"]:
                         unformatted_errors = returned_dict["errors"]
                         error_list = unpack_dict(unformatted_errors)
